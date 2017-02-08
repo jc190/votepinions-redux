@@ -1,0 +1,20 @@
+.route--active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.votepinions--nav {
+  background-color: #303F9F;
+  border-top: none;
+  border-bottom: none;//1px solid #3949AB;
+  border-left: none;
+  border-right: none;
+  box-shadow: 0px 2px 4px rgba(0,0,0,.3);
+  a, .navbar-brand, .navbar-text, .navbar-nav > li > a {
+    color: white;
+  }
+}
+
+.navbar-btn, .fa {
+  margin-left: 1rem;
+}
