@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Link } from 'react-router'
 import PollResultBars from './PollResultBars'
 import PollResultPie from './PollResultPie'
+import ShareBtn from './ShareBtn'
 import './PollResult.scss'
 
 export class PollResult extends React.Component {
@@ -42,6 +43,8 @@ export class PollResult extends React.Component {
               options={this.state.poll.options}
               totalVotes={this.state.poll.votes}
               /> : null}
+            <hr />
+            <ShareBtn pollURL={'https://' + window.location.hostname + this.props.location.pathname} />
           </div>
           <div className='col-md-6 hidden-xs'>
             {this.state.poll ? <PollResultPie

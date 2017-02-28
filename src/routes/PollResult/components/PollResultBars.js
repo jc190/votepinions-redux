@@ -9,10 +9,10 @@ export class PollResultBars extends React.Component {
   renderOptions (options) {
     let html = []
     let votes = this.props.totalVotes
-    options.map((option) => {
+    options.map((option, index) => {
       let percent = (option.count / votes) * 100
       html.push(
-        <li>
+        <li key={index}>
           <p>{option.item}</p>
           <div className='progress'>
             <div className='progress-bar'

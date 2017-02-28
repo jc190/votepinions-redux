@@ -34,9 +34,9 @@ export class DashboardPolls extends React.Component {
     }
   }
   render () {
-    const polls = this.state.polls.map((poll) => {
+    const polls = this.state.polls.map((poll, index) => {
       return (
-        <div className='row'>
+        <div className='row' key={index}>
           <div className='col-xs-12'>
             <div className='panel panel-default'>
               <div className='panel-body'>

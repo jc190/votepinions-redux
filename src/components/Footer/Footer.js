@@ -9,11 +9,21 @@ export class Footer extends React.Component {
           <div className='row'>
             <div className='col-xs-12'>
               <hr />
-              <p>
+              <p className='hidden-xs'>
                 <span>
                   <small>Votepinions created by James Calhoun</small>
                 </span>
                 <span className='pull-right'>
+                  <small>[view source code]</small>&nbsp;
+                  <i className='fa fa-github' aria-hidden='true' />
+                </span>
+              </p>
+              <p className='visible-xs text-center'>
+                <span>
+                  <small>Votepinions created by James Calhoun</small>
+                </span>
+                <br />
+                <span>
                   <small>[view source code]</small>&nbsp;
                   <i className='fa fa-github' aria-hidden='true' />
                 </span>

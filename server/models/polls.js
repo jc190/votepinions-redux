@@ -24,6 +24,16 @@ module.exports.createPoll = function (newPoll, cb) {
   newPoll.save(cb)
 }
 
+module.exports.updateAuthorDisplayName = function (user, cb) {
+  Poll.find({ 'author.id': user._id }, (err, polls) => {
+    if (err) cb(err)
+    polls.map((poll) => {
+      poll.author.displayName = user.displayName
+      poll.save()
+    })
+  }).exec(cb)
+}
+
 module.exports.deletePoll = function (pollId, cb) {
   Poll.remove({ _id: pollId }).exec(cb)
 }

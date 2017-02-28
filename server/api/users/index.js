@@ -27,7 +27,7 @@ router.post('/login', (req, res, next) => {
     }
     req.logIn(user, (err) => {
       if (err) throw err
-      return res.send(200)
+      return res.sendStatus(200)
     })
   })(req, res, next)
 })
@@ -130,71 +130,102 @@ router.get('/polls', (req, res) => {
   })
 })
 
-// router.get('/:user', function (req, res) {
-//   if (req.query.poll) {
-//     if (req.query.results) {
-//       if (req.query.json) {
-//         Poll.getPollById(req.query.poll, function (err, poll) {
-//           if (err) throw err
-//           var results = poll.options.map(function (obj) {
-//             return [obj.item, obj.count]
-//           })
-//           res.setHeader('Content-Type', 'application/json')
-//           return res.send(JSON.stringify(results))
-//         })
-//       }
-//       Poll.getPollById(req.query.poll, function (err, poll) {
-//         if (err) throw err
-//         return res.render('pollResults', { poll })
-//       })
-//     } else if (req.query.delete) {
-//       Poll.getPollById(req.query.poll, function (err, poll) {
-//         if (err) throw err
-//         if (req.user && poll.author === req.user.username) {
-//           Poll.deletePoll(req.query.poll, function (err) {
-//             if (err) throw err
-//             return res.redirect('/user/' + req.user.username)
-//           })
-//         } else {
-//           return res.redirect('/')
-//         }
-//       })
-//     } else {
-//       Poll.getPollById(req.query.poll, function (err, poll) {
-//         if (err) throw err
-//         return res.render('pollpage', { poll })
-//       })
-//     }
-//   } else {
-//     Poll.findByUsername(req.params.user, function (err, polls) {
-//       if (err) throw err
-//       if (req.user && req.params.user === req.user.username) {
-//         res.render('profile', { polls: polls })
-//       } else {
-//         res.render('profile', { polls: polls, username: req.params.user })
-//       }
-//     })
-//   }
-// })
+router.post('/update', (req, res) => {
+  if (!req.body.update) {
+    return res.sendStatus(400)
+  }
+  User.findById(req.user._id, (err, user) => {
+    if (err) throw err
+    const messages = []
+    let operations = 0, completedOperations = 0
+    if (req.body.update.displayName) {
+      const usernameSchema = {
+        'update.displayName': {
+          notEmpty: true,
+          isAlphanumeric: {
+            errorMessage: 'Username must only contain [A-z][0-9].'
+          },
+          isLength: {
+            options: { min: 4 },
+            errorMessage: 'Username must contain at least 4 characters.'
+          }
+        }
+      }
+      req.checkBody(usernameSchema)
+      const errors = req.validationErrors()
+      if (errors) {
+        errors.map((error) => {
+          messages.push({ type: 'error', msg: error.msg })
+        })
+        return reqFinished(true)
+      }
+      operations++
+      user.displayName = req.body.update.displayName
+      user.save((err, user) => {
+        if (err) throw err
+        Poll.updateAuthorDisplayName(user, (err, ok) => {
+          if (err) throw err
+          messages.push({ type: 'success', msg: 'Display name has been changed to: ' + user.displayName + '.'})
+          completedOperations++
+          return reqFinished()
+        })
+      })
+    }
+    if (req.body.update.password.new) {
+      const passwordSchema = {
+        'update.password.new': {
+          notEmpty: true,
+          isLength: {
+            options: { min: 6 },
+            errorMessage: 'Password must contain at least 6 characters.'
+          },
+          errorMessage: 'New password is required.'
+        },
+        'update.password.old': {
+          notEmpty: true,
+          errorMessage: 'Current password is required.'
+        },
+        'update.password.verify': {
+          equals: {
+            options: req.body.update.password.new
+          },
+          errorMessage: 'Passwords do not match.'
+        }
+      }
+      req.checkBody(passwordSchema)
+      const errors = req.validationErrors()
+      if (errors) {
+        errors.map((error) => {
+          messages.push({ type: 'error', msg: error.msg })
+        })
+        return reqFinished(true)
+      }
+      operations++
+      User.updatePassword(user, req.body.update.password.old, req.body.update.password.new, (err, user) => {
+        if (err) {
+          messages.push({ type: 'error', msg: 'Wrong current passoword.'})
+          return reqFinished(true)
+        }
+        messages.push({ type: 'success', msg: 'Password has been updated.'})
+        completedOperations++
+        return reqFinished()
+      })
+    }
 
-// router.post('/:user', function (req, res) {
-//   if (req.query.poll) {
-//     if (req.body.optionsRadios) {
-//       if (req.body.optionsRadios === 'otherOption') {
-//         Poll.castOtherVote(req.query.poll, req.body.otherOption, function (err) {
-//           if (err) throw err
-//           res.redirect('/user/' + req.params.user + '?poll=' + req.query.poll + '&results=true')
-//         })
-//       } else {
-//         Poll.castVote(req.query.poll, req.body.optionsRadios, function (err) {
-//           if (err) throw err
-//           res.redirect('/user/' + req.params.user + '?poll=' + req.query.poll + '&results=true')
-//         })
-//       }
-//     } else {
-//       res.redirect('/user/' + req.params.user + '?poll=' + req.query.poll)
-//     }
-//   }
-// })
+    reqFinished()
+
+    function reqFinished (errors) {
+      if (errors) {
+        return res.send({ messages })
+      }
+      if (operations === 0) {
+        return res.sendStatus(400)
+      }
+      if (completedOperations === operations) {
+        return res.send({ messages })
+      }
+    }
+  })
+})
 
 module.exports = router

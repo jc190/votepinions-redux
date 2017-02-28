@@ -1,6 +1,7 @@
 import React from 'react'
+import DashboardSettingsForm from './DashboardSettingsForm'
 
-export class DashboardPolls extends React.Component {
+export class DashboardSettings extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -14,12 +15,10 @@ export class DashboardPolls extends React.Component {
   render () {
     return (
       <div>
-        <h1>User Settings</h1>
-        <hr />
-        <p>This is where your accounts settings will be.</p>
+        <DashboardSettingsForm {...this.props} />
       </div>
     )
   }
 }
 
-export default DashboardPolls
+export default DashboardSettings

@@ -15,12 +15,10 @@ export class PollForm extends React.Component {
   }
   onSubmit (e) {
     e.preventDefault()
-    console.log(this.state)
     axios.post('/api/polls/vote/' + this.props.id, {
       selection: this.state.selection,
       other: this.state.other
     }).then((response) => {
-      console.log(response)
       browserHistory.push('/poll/' + this.props.id)
     })
   }
@@ -35,7 +33,6 @@ export class PollForm extends React.Component {
     })
   }
   render () {
-    // console.log(this.state)
     let selection = this.state.selection
     const options = this.props.options.map((option, index) => {
       return (
@@ -58,7 +55,8 @@ export class PollForm extends React.Component {
     return (
       <form onSubmit={this.onSubmit}>
         {options}
-        <div className='form-group'>
+        {this.props.noUser ? null
+        : <div className='form-group'>
           <div className='radio'>
             <label>
               <input
@@ -78,7 +76,7 @@ export class PollForm extends React.Component {
               />
             </label>
           </div>
-        </div>
+        </div>}
         <button className='btn btn-default btn-block' type='submit'>Vote</button>
       </form>
     )
@@ -87,7 +85,8 @@ export class PollForm extends React.Component {
 
 PollForm.propTypes = {
   id: React.PropTypes.string.isRequired,
-  options: React.PropTypes.array.isRequired
+  options: React.PropTypes.array.isRequired,
+  noUser: React.PropTypes.bool.isRequired
 }
 
 export default PollForm

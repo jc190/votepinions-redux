@@ -12,10 +12,10 @@ export class Dashboard extends React.Component {
     super(props)
     this.getTabs = this.getTabs.bind(this)
   }
-  getTabs () {
+  getTabs (props) {
     const data = [
       { name: 'Polls', content: <DashboardPolls /> },
-      { name: 'Settings', content: <DashboardSettings /> }
+      { name: 'Settings', content: <DashboardSettings {...props} /> }
     ]
     return data.map((d, index) => {
       return ({
@@ -26,10 +26,15 @@ export class Dashboard extends React.Component {
     })
   }
   render () {
+    const selectedTab = this.props.location.query.tab ? +this.props.location.query.tab : 0
     return (
       <div>
         <h1>Dashboard</h1>
-        <Tabs items={this.getTabs()} transform={false} />
+        <Tabs
+          items={this.getTabs(this.props)}
+          transform={false}
+          selectedTabKey={selectedTab}
+        />
       </div>
     )
   }

@@ -42,9 +42,23 @@ module.exports.createUser = function (newUser, cb) {
   }
 }
 
-// module.exports.addPoll = (pollID, cb) => {
-//
-// }
+module.exports.updatePassword = function (user, oldPassword, newPassword, cb) {
+  bcrypt.compare(oldPassword, user.accounts.local.password, function (err, isMatch) {
+    if (err) return cb(err)
+    if (isMatch) {
+      bcrypt.genSalt(10, function (err, salt) {
+        if (err) return cb(err)
+        bcrypt.hash(newPassword, salt, function (err, hash) {
+          if (err) return cb(err)
+          user.accounts.local.password = hash
+          user.save(cb)
+        })
+      })
+    } else {
+      cb(true)
+    }
+  })
+}
 
 module.exports.getUserByEmail = function (email, cb) {
   User.findOne({ 'email': email }, cb)
@@ -56,14 +70,6 @@ module.exports.findByFacebookID = function (fbID, cb) {
 
 module.exports.getUserById = function (id, cb) {
   User.findById(id, cb)
-}
-
-module.exports.genUsername = function () {
-  User.count({}, function (err, count) {
-    if (err) throw err
-    console.log(count)
-    return 'User_' + count
-  })
 }
 
 module.exports.checkPassword = function (inputPassword, userPassword, cb) {

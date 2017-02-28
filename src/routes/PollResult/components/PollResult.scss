@@ -5,7 +5,9 @@
     list-style: none;
   }
 }
-
+.popover {
+  max-width: 600px;
+}
 .pie-chart--tool-tip {
   display: inline-block;
   position: absolute;
