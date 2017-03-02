@@ -58,7 +58,8 @@ export class PollResult extends React.Component {
 }
 
 PollResult.propTypes = {
-  params: React.PropTypes.any
+  params: React.PropTypes.any,
+  location: React.PropTypes.object
 }
 
 export default PollResult

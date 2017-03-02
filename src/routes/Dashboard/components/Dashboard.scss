@@ -1,3 +1,18 @@
 .Tab:focus {
   outline: none;
 }
+
+.dashboard--container {
+  h1 {
+    margin-bottom: 8px;
+  }
+  h4 {
+    color: #777;
+    margin-top: 0;
+    margin-bottom: 24px;
+    i {
+      margin-right: 8px;
+      margin-left: 0;
+    }
+  }
+}

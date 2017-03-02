@@ -137,7 +137,8 @@ router.post('/update', (req, res) => {
   User.findById(req.user._id, (err, user) => {
     if (err) throw err
     const messages = []
-    let operations = 0, completedOperations = 0
+    let operations = 0
+    let completedOperations = 0
     if (req.body.update.displayName) {
       const usernameSchema = {
         'update.displayName': {
@@ -165,7 +166,7 @@ router.post('/update', (req, res) => {
         if (err) throw err
         Poll.updateAuthorDisplayName(user, (err, ok) => {
           if (err) throw err
-          messages.push({ type: 'success', msg: 'Display name has been changed to: ' + user.displayName + '.'})
+          messages.push({ type: 'success', msg: 'Display name has been changed to: ' + user.displayName + '.' })
           completedOperations++
           return reqFinished()
         })
@@ -203,10 +204,10 @@ router.post('/update', (req, res) => {
       operations++
       User.updatePassword(user, req.body.update.password.old, req.body.update.password.new, (err, user) => {
         if (err) {
-          messages.push({ type: 'error', msg: 'Wrong current passoword.'})
+          messages.push({ type: 'error', msg: 'Wrong current passoword.' })
           return reqFinished(true)
         }
-        messages.push({ type: 'success', msg: 'Password has been updated.'})
+        messages.push({ type: 'success', msg: 'Password has been updated.' })
         completedOperations++
         return reqFinished()
       })

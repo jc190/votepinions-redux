@@ -5,11 +5,13 @@ class ShareBtn extends React.Component {
     super(props)
     this.popoverInit = this.popoverInit.bind(this)
   }
+  componentWillMount () {
+    this.popoverInit()
+  }
   popoverInit () {
-    $('[data-toggle="popover"]').popover()
+    document.querySelectorAll('[data-toggle="popover"]').popover()
   }
   render () {
-    this.popoverInit()
     return (
       <button
         className='btn btn-primary btn-block'
@@ -22,6 +24,10 @@ class ShareBtn extends React.Component {
       </button>
     )
   }
+}
+
+ShareBtn.propTypes = {
+  pollURL: React.PropTypes.any
 }
 
 export default ShareBtn

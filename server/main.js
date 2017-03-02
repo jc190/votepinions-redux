@@ -10,8 +10,9 @@ const polls = require('./api/polls')
 const passport = require('passport')
 const bodyParser = require('body-parser')
 const expressValidator = require('express-validator')
+const config = require('./config')
 
-mongoose.connect('mongodb://localhost:27017/voteapp3')
+mongoose.connect('mongodb://' + config.mdbuser + ':"' + config.mdbpw + '"@jamesc.me:27017/voteapp')
 
 const app = express()
 
@@ -24,7 +25,7 @@ require('./config/passport')(passport)
 // Express session
 app.use(require('express-session')(
   {
-    secret: 'keyboard cat',
+    secret: config.sessionSecret,
     resave: true,
     saveUninitialized: true
   }))

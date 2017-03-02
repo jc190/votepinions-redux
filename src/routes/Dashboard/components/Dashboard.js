@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import Tabs from 'react-responsive-tabs'
 
 import DashboardPolls from './DashboardPolls'
@@ -28,8 +29,9 @@ export class Dashboard extends React.Component {
   render () {
     const selectedTab = this.props.location.query.tab ? +this.props.location.query.tab : 0
     return (
-      <div>
+      <div className='dashboard--container'>
         <h1>Dashboard</h1>
+        <h4><i className='fa fa-user' />{this.props.user.displayName}</h4>
         <Tabs
           items={this.getTabs(this.props)}
           transform={false}
@@ -40,4 +42,13 @@ export class Dashboard extends React.Component {
   }
 }
 
-export default Dashboard
+Dashboard.propTypes = {
+  location: React.PropTypes.object,
+  user: React.PropTypes.object
+}
+
+const mapStateToProps = (state) => ({
+  user: state.auth
+})
+
+export default connect(mapStateToProps)(Dashboard)

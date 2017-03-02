@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import { getUser } from '../../../store/auth'
 
 export class DashboardSettingsForm extends React.Component {
   constructor (props) {
@@ -43,13 +44,13 @@ export class DashboardSettingsForm extends React.Component {
             messages: newMessages
           })
           ctx.resetForms()
+          ctx.props.dispatch(getUser)
         }
-
       })
       .catch((err) => {
         console.log(err)
         let newMessages = this.state.messages
-        newMessages.push({type: 'error', msg: 'Bad request.'})
+        newMessages.push({ type: 'error', msg: 'Bad request.' })
         ctx.setState({
           messages: newMessages
         })
@@ -81,6 +82,7 @@ export class DashboardSettingsForm extends React.Component {
     })
   }
   render () {
+    console.log(this.props)
     const msgs = this.state.messages.length > 0 ? this.state.messages.map(this.handleMsgs) : null
     return (
       <form onSubmit={this.onSubmit}>
@@ -90,21 +92,45 @@ export class DashboardSettingsForm extends React.Component {
             <hr />
             <div className='form-group'>
               <label className='control-label' htmlFor='displayName'>New display name</label>
-              <input onChange={this.onChange} type='text' className='form-control' name='displayName' value={this.state.displayName} />
+              <input
+                onChange={this.onChange}
+                type='text'
+                className='form-control'
+                name='displayName'
+                value={this.state.displayName}
+              />
             </div>
             <h3>Change password</h3>
             <hr />
             <div className='form-group'>
               <label htmlFor='currentPassword'>Current password</label>
-              <input onChange={this.onChange} type='password' className='form-control' name='currentPassword' value={this.state.currentPassword} />
+              <input
+                onChange={this.onChange}
+                type='password'
+                className='form-control'
+                name='currentPassword'
+                value={this.state.currentPassword}
+              />
             </div>
             <div className='form-group'>
               <label htmlFor='newPassword'>New password</label>
-              <input onChange={this.onChange} type='password' className='form-control' name='newPassword' value={this.state.newPassword} />
+              <input
+                onChange={this.onChange}
+                type='password'
+                className='form-control'
+                name='newPassword'
+                value={this.state.newPassword}
+              />
             </div>
             <div className='form-group'>
               <label htmlFor='verifyPassword'>Verify new password</label>
-              <input onChange={this.onChange} type='password' className='form-control' name='verifyPassword' value={this.state.verifyPassword} />
+              <input
+                onChange={this.onChange}
+                type='password'
+                className='form-control'
+                name='verifyPassword'
+                value={this.state.verifyPassword}
+               />
             </div>
             <button className='btn btn-primary' type='submit'>Save</button>
             <div style={{ marginTop: '15px' }}>{msgs}</div>
